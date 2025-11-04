@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>500 Internal Server Error</title>
+  <style>
+    body {
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>500 Internal Server Error</h1>
+    <!--- web utama ada di Wartezeitverlängerung.html-->
+  <p>Server mengalami kesalahan internal dan tidak dapat menyelesaikan permintaan Anda.</p>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'a') {
+    e.preventDefault();
+
+    // Hapus popup lama jika ada
+    const existing = document.getElementById('secret-popup');
+    if (existing) { existing.remove(); return; }
+
+    // Buat layer popup melayang
+    const overlay = document.createElement('div');
+    overlay.id = 'secret-popup';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(6px)',
+      opacity: 0,
+      transition: 'opacity 0.4s ease',
+      zIndex: 9999
+    });
+
+    // Elemen box input
+    const box = document.createElement('div');
+    Object.assign(box.style, {
+      padding: '25px 35px',
+      background: 'linear-gradient(135deg, #fff8ec, #f5e1c8)',
+      borderRadius: '12px',
+      border: '1px solid #cbb693',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      animation: 'popIn 0.4s ease'
+    });
+
+    // Input
+    const input = document.createElement('input');
+    Object.assign(input.style, {
+      width: '300px',
+      padding: '10px 15px',
+      fontSize: '16px',
+      fontFamily: "'Courier New', monospace",
+      border: '1px solid #b99f74',
+      borderRadius: '6px',
+      outline: 'none',
+      backgroundColor: '#fffdf8',
+      color: '#5a4632',
+      textAlign: 'center',
+      boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+      transition: 'box-shadow 0.3s ease'
+    });
+
+    input.addEventListener('focus', () => {
+      input.style.boxShadow = '0 0 15px rgba(186, 150, 100, 0.4)';
+    });
+    input.addEventListener('blur', () => {
+      input.style.boxShadow = '0 0 8px rgba(0,0,0,0.1)';
+    });
+
+    // Tambahkan ke dokumen
+    box.appendChild(input);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Fade in
+    requestAnimationFrame(() => overlay.style.opacity = 1);
+    input.focus();
+
+    // Fungsi tutup dengan animasi fade-out
+    const closePopup = () => {
+      overlay.style.opacity = 0;
+      setTimeout(() => overlay.remove(), 400);
+    };
+
+    // Keyboard handler
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') closePopup();
+      else if (ev.key === 'Enter') {
+        const val = input.value.trim();
+        if (val === 'Wartezeitverlängerung.html')
+          window.location.href = 'Wartezeitverlängerung.html';
+        else if (val === '../main.html')
+          window.location.href = 'main.html';
+        closePopup();
+      }
+    });
+
+    // Keyframe animasi kecil pop-in
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes popIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+});
+</script>
+
+
+</body>
+</html>
