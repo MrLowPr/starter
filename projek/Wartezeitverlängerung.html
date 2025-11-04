@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emosi Manusia - Eksplorasi Emosi Manusia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Reset dan variabel */
+        :root {
+            --cream: #f5f1e6;
+            --beige: #e8dfca;
+            --brown: #8b7355;
+            --dark-brown: #5d4037;
+            --gold: #c9a96e;
+            --paper-texture: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.1"/></svg>');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: var(--cream);
+            color: var(--dark-brown);
+            line-height: 1.6;
+            background-image: var(--paper-texture);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: var(--dark-brown);
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--brown);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        blockquote {
+            font-style: italic;
+            border-left: 3px solid var(--gold);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            color: var(--brown);
+        }
+
+        /* Layout */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-title {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards 0.3s;
+        }
+
+        .hero-subtitle {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards 0.6s;
+            font-size: 1.5rem;
+            color: var(--brown);
+            margin-bottom: 3rem;
+        }
+
+        .quote-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            background: rgba(232, 223, 202, 0.7);
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards 0.9s;
+        }
+
+        /* Bingkai Foto yang Diperbarui */
+        .vintage-frame {
+            width: 200px;
+            height: 250px;
+            border: 12px solid var(--brown);
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%238b7355" stroke-width="12"/></svg>') 30 stretch;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            flex-shrink: 0;
+            background: var(--beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .vintage-frame::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px solid rgba(201, 169, 110, 0.5);
+            z-index: 1;
+        }
+
+        .author-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.3) contrast(1.1) brightness(1.05);
+            transition: transform 0.5s ease;
+        }
+
+        .vintage-frame:hover .author-photo {
+            transform: scale(1.03);
+        }
+
+        .quote-text {
+            flex: 1;
+            font-size: 1.2rem;
+            text-align: left;
+        }
+
+        .quote-author {
+            margin-top: 1rem;
+            font-weight: bold;
+            color: var(--dark-brown);
+        }
+
+        /* Table of Contents */
+        #table-of-contents {
+            background-color: var(--beige);
+            position: relative;
+            z-index: 10;
+        }
+
+        .toc-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .toc-list {
+            list-style: none;
+            counter-reset: roman-counter;
+        }
+
+        .toc-item {
+            margin-bottom: 1.5rem;
+            counter-increment: roman-counter;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .toc-item::before {
+            content: counter(roman-counter, upper-roman) ". ";
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: var(--gold);
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .toc-link {
+            text-decoration: none;
+            color: var(--dark-brown);
+            font-size: 1.3rem;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .toc-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .toc-link:hover {
+            color: var(--gold);
+        }
+
+        .toc-link:hover::after {
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 3rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        /* Motion Blur Effect */
+        .motion-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 241, 230, 0.9);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .motion-blur.active {
+            opacity: 1;
+        }
+
+        .blur-content {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--dark-brown);
+            text-align: center;
+            animation: blurText 0.8s ease infinite alternate;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blurText {
+            from {
+                filter: blur(0px);
+                transform: scale(1);
+            }
+            to {
+                filter: blur(5px);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .quote-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .vintage-frame {
+                width: 180px;
+                height: 225px;
+            }
+            
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vintage-frame {
+                width: 160px;
+                height: 200px;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        a:focus, button:focus {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section id="hero">
+        <h1 class="hero-title">Emosi Manusia</h1>
+        <p class="hero-subtitle">Eksplorasi Emosi Manusia</p>
+        
+        <div class="quote-container">
+            <div class="vintage-frame">
+                <!-- Ganti URL dengan foto Viktor Frankl yang Anda miliki -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Viktor_Frankl_2.jpg/800px-Viktor_Frankl_2.jpg" 
+                     alt="Potret Viktor Frankl" 
+                     class="author-photo"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="author-photo" style="display:none; align-items:center; justify-content:center; font-style:italic; color:var(--brown); background:linear-gradient(135deg, #d9c7a7, #c9b18b);">
+                    Viktor Frankl
+                </div>
+            </div>
+            <div class="quote-text">
+                <blockquote>
+                    "Between stimulus and response there is a space. In that space is our power to choose our response. In our response lies our growth and our freedom."
+                </blockquote>
+                <p class="quote-author">- Viktor Frankl</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Motion Blur Effect -->
+    <div class="motion-blur" id="motionBlur">
+        <div class="blur-content">Mengeksplorasi Emosi Manusia...</div>
+    </div>
+
+    <!-- Table of Contents -->
+    <section id="table-of-contents">
+        <div class="toc-container">
+            <h2>Daftar Isi</h2>
+            <ol class="toc-list">
+                <li class="toc-item">
+                    <a href="#section-1" class="toc-link">Apa itu Emosi?</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-2" class="toc-link">Apa itu Manusia?</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-3" class="toc-link">Emosi Manusia</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-4" class="toc-link">Emosi Mempunyai Kesadaran?</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-5" class="toc-link">Jenis-Jenis Emosi Manusia</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-6" class="toc-link">Faktor Pemicu Emosi?</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-7" class="toc-link">Cara Mencegahnya</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-8" class="toc-link">Risiko Kehilangan Pengendalian Emosi?</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-9" class="toc-link">Penutupan & Kutipan Motivasi</a>
+                </li>
+                <li class="toc-item">
+                    <a href="#section-10" class="toc-link">Berbagai Sumber</a>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Content Sections -->
+    <main>
+        <section id="section-1" class="content-section">
+            <h2>I. Apa itu Emosi?</h2>
+            <p>Emosi adalah pengalaman subjektif yang melibatkan perasaan, pemikiran, dan reaksi fisiologis terhadap suatu peristiwa atau situasi. Emosi merupakan respons kompleks yang melibatkan komponen kognitif, fisiologis, dan perilaku.</p>
+            <p>Para psikolog mendefinisikan emosi sebagai keadaan mental dan fisiologis yang terkait dengan berbagai perasaan, pikiran, dan perilaku. Emosi memainkan peran penting dalam bagaimana kita berinteraksi dengan dunia di sekitar kita.</p>
+        </section>
+
+        <section id="section-2" class="content-section">
+            <h2>II. Apa itu Manusia?</h2>
+            <p>Manusia adalah makhluk kompleks yang memiliki kapasitas untuk berpikir, merasa, dan bertindak secara sadar. Sebagai spesies, manusia memiliki kemampuan kognitif yang unik, termasuk kesadaran diri, bahasa, dan kemampuan untuk merefleksikan pengalaman masa lalu serta merencanakan masa depan.</p>
+            <p>Manusia adalah makhluk bio-psiko-sosio-spiritual yang memiliki dimensi fisik, mental, emosional, sosial, dan spiritual yang saling terhubung.</p>
+        </section>
+
+        <section id="section-3" class="content-section">
+            <h2>III. Emosi Manusia</h2>
+            <p>Emosi manusia adalah bagian integral dari pengalaman hidup sehari-hari. Mereka memengaruhi persepsi, pengambilan keputusan, hubungan interpersonal, dan kesejahteraan secara keseluruhan.</p>
+            <p>Emosi manusia dapat bervariasi dalam intensitas, durasi, dan kompleksitas. Beberapa emosi bersifat dasar dan universal, sementara yang lain lebih kompleks dan dipengaruhi oleh budaya, pengalaman pribadi, dan konteks sosial.</p>
+        </section>
+
+        <section id="section-4" class="content-section">
+            <h2>IV. Emosi Mempunyai Kesadaran?</h2>
+            <p>Pertanyaan tentang apakah emosi memiliki kesadaran adalah topik perdebatan dalam filsafat dan ilmu saraf. Beberapa teori berpendapat bahwa emosi adalah produk dari proses bawah sadar, sementara yang lain berpendapat bahwa emosi melibatkan komponen kesadaran yang signifikan.</p>
+            <p>Penelitian terbaru menunjukkan bahwa emosi melibatkan interaksi kompleks antara sistem limbik (terkait dengan emosi) dan korteks prefrontal (terkait dengan kesadaran dan regulasi).</p>
+        </section>
+
+        <section id="section-5" class="content-section">
+            <h2>V. Jenis-Jenis Emosi Manusia</h2>
+            <p>Para psikolog telah mengidentifikasi berbagai jenis emosi manusia. Paul Ekman mengusulkan enam emosi dasar universal: kebahagiaan, kesedihan, ketakutan, kemarahan, kejutan, dan jijik.</p>
+            <p>Selain emosi dasar, manusia juga mengalami emosi kompleks seperti cinta, rasa bersalah, malu, bangga, iri hati, dan syukur. Emosi kompleks ini sering kali merupakan kombinasi dari emosi dasar dan dipengaruhi oleh faktor kognitif dan sosial.</p>
+        </section>
+
+        <section id="section-6" class="content-section">
+            <h2>VI. Faktor Pemicu Emosi?</h2>
+            <p>Emosi dapat dipicu oleh berbagai faktor, termasuk:</p>
+            <ul>
+                <li>Peristiwa eksternal (kehilangan, keberhasilan, konflik)</li>
+                <li>Pikiran dan interpretasi</li>
+                <li>Kenangan dan asosiasi</li>
+                <li>Kebutuhan dan keinginan yang tidak terpenuhi</li>
+                <li>Perubahan fisiologis (kelelahan, kelaparan, sakit)</li>
+                <li>Lingkungan sosial dan budaya</li>
+            </ul>
+        </section>
+
+        <section id="section-7" class="content-section">
+            <h2>VII. Cara Mencegahnya</h2>
+            <p>Meskipun kita tidak dapat sepenuhnya mencegah munculnya emosi, kita dapat mengembangkan keterampilan untuk mengelola respons emosional kita:</p>
+            <ul>
+                <li>Kesadaran emosional (mengenali dan memberi nama emosi)</li>
+                <li>Regulasi emosi (strategi untuk mengelola intensitas dan durasi emosi)</li>
+                <li>Mindfulness dan meditasi</li>
+                <li>Restrukturisasi kognitif (mengubah pola pikir yang tidak membantu)</li>
+                <li>Komunikasi asertif</li>
+                <li>Pemecahan masalah yang efektif</li>
+            </ul>
+        </section>
+
+        <section id="section-8" class="content-section">
+            <h2>VIII. Risiko Kehilangan Pengendalian Emosi?</h2>
+            <p>Kehilangan kendali atas emosi dapat memiliki konsekuensi negatif, termasuk:</p>
+            <ul>
+                <li>Masalah hubungan interpersonal</li>
+                <li>Penurunan kinerja kerja atau akademik</li>
+                <li>Masalah kesehatan mental (kecemasan, depresi)</li>
+                <li>Masalah kesehatan fisik (tekanan darah tinggi, gangguan pencernaan)</li>
+                <li>Perilaku impulsif dan berisiko</li>
+                <li>Kesulitan dalam pengambilan keputusan</li>
+            </ul>
+        </section>
+
+        <section id="section-9" class="content-section">
+            <h2>IX. Penutupan & Kutipan Motivasi</h2>
+            <p>Pemahaman tentang emosi manusia adalah perjalanan seumur hidup. Dengan mengenali, memahami, dan mengelola emosi kita, kita dapat meningkatkan kualitas hidup dan hubungan kita dengan orang lain.</p>
+            <blockquote>
+                "The best and most beautiful things in the world cannot be seen or even touched — they must be felt with the heart."
+                <footer>- Helen Keller</footer>
+            </blockquote>
+        </section>
+
+        <section id="section-10" class="content-section">
+            <h2>X. Berbagai Sumber</h2>
+            <p>Untuk mempelajari lebih lanjut tentang emosi manusia, berikut adalah beberapa sumber yang direkomendasikan:</p>
+            <ul>
+                <li>Ekman, P. (2003). Emotions Revealed: Recognizing Faces and Feelings to Improve Communication and Emotional Life.</li>
+                <li>Goleman, D. (1995). Emotional Intelligence: Why It Can Matter More Than IQ.</li>
+                <li>Frankl, V. E. (1946). Man's Search for Meaning.</li>
+                <li>Damasio, A. (1994). Descartes' Error: Emotion, Reason, and the Human Brain.</li>
+                <li>Journal of Personality and Social Psychology</li>
+                <li>Emotion Review</li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const motionBlur = document.getElementById('motionBlur');
+            const tocItems = document.querySelectorAll('.toc-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            // Animate table of contents items
+            tocItems.forEach((item, index) => {
+                item.style.animation = `fadeInUp 0.5s ease forwards ${0.5 + index * 0.1}s`;
+            });
+            
+            // Scroll effect with motion blur
+            let isScrolling = false;
+            let scrollTimer;
+            
+            window.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    motionBlur.classList.add('active');
+                    isScrolling = true;
+                }
+                
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(function() {
+                    motionBlur.classList.remove('active');
+                    isScrolling = false;
+                }, 300);
+                
+                // Show content sections when in viewport
+                contentSections.forEach(section => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (sectionTop < windowHeight * 0.85) {
+                        section.classList.add('visible');
+                    }
+                });
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 50,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Initialize content sections visibility
+            contentSections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (sectionTop < windowHeight * 0.85) {
+                    section.classList.add('visible');
+                }
+            });
+        });
+    </script>
+  <script>
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'a') {
+    e.preventDefault();
+
+    // Hapus popup lama jika ada
+    const existing = document.getElementById('secret-popup');
+    if (existing) { existing.remove(); return; }
+
+    // Buat layer popup melayang
+    const overlay = document.createElement('div');
+    overlay.id = 'secret-popup';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(6px)',
+      opacity: 0,
+      transition: 'opacity 0.4s ease',
+      zIndex: 9999
+    });
+
+    // Elemen box input
+    const box = document.createElement('div');
+    Object.assign(box.style, {
+      padding: '25px 35px',
+      background: 'linear-gradient(135deg, #fff8ec, #f5e1c8)',
+      borderRadius: '12px',
+      border: '1px solid #cbb693',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      animation: 'popIn 0.4s ease'
+    });
+
+    // Input
+    const input = document.createElement('input');
+    Object.assign(input.style, {
+      width: '300px',
+      padding: '10px 15px',
+      fontSize: '16px',
+      fontFamily: "'Courier New', monospace",
+      border: '1px solid #b99f74',
+      borderRadius: '6px',
+      outline: 'none',
+      backgroundColor: '#fffdf8',
+      color: '#5a4632',
+      textAlign: 'center',
+      boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+      transition: 'box-shadow 0.3s ease'
+    });
+
+    input.addEventListener('focus', () => {
+      input.style.boxShadow = '0 0 15px rgba(186, 150, 100, 0.4)';
+    });
+    input.addEventListener('blur', () => {
+      input.style.boxShadow = '0 0 8px rgba(0,0,0,0.1)';
+    });
+
+    // Tambahkan ke dokumen
+    box.appendChild(input);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Fade in
+    requestAnimationFrame(() => overlay.style.opacity = 1);
+    input.focus();
+
+    // Fungsi tutup dengan animasi fade-out
+    const closePopup = () => {
+      overlay.style.opacity = 0;
+      setTimeout(() => overlay.remove(), 400);
+    };
+
+    // Keyboard handler
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') closePopup();
+      else if (ev.key === 'Enter') {
+        const val = input.value.trim();
+        if (val === 'Wartezeitverlängerung.html')
+          window.location.href = 'Wartezeitverlängerung.html';
+        else if (val === '../main.html')
+          window.location.href = 'main.html';
+        closePopup();
+      }
+    });
+
+    // Keyframe animasi kecil pop-in
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes popIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+});
+
+</script>
+</body>
+</html>
